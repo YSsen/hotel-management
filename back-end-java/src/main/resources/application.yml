@@ -1,0 +1,20 @@
+server:
+  port: 8089
+  servlet:
+    context-path: "/ho-api"
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 1234
+    url: jdbc:mysql://localhost:3306/hotel?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=true
+  servlet:
+    multipart:
+      enabled: true #默认支持文件上传
+      max-file-size: 2MB # 最大支持文件大小
+mybatis:
+  type-aliases-package: classpath*:com.yssen.hotel.entity
+  mapper-locations: classpath*:mybatis/mapper/*.xml
+logging:
+  level:
+    com.yssen.hotel : debug

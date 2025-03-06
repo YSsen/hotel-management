@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yssen.hotel.mapper.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.yssen.hotel.entity.Order">
+    <id column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="cid" jdbcType="VARCHAR" property="cid" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="room_id" jdbcType="INTEGER" property="roomId" />
+    <result column="room_number" jdbcType="VARCHAR" property="roomNumber" />
+    <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="rc_num" jdbcType="INTEGER" property="rcNum" />
+    <result column="in_date" jdbcType="TIMESTAMP" property="inDate" />
+    <result column="out_date" jdbcType="TIMESTAMP" property="outDate" />
+    <result column="order_status" jdbcType="INTEGER" property="orderStatus" />
+    <result column="order_cost" jdbcType="DOUBLE" property="orderCost" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_id, name, cid, phone, room_id, room_number,type_name, price, rc_num,
+    in_date, out_date, order_status, order_cost, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from order_info
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from order_info
+  </select>
+  <select id="getOrderCount"  resultType="java.lang.Integer">
+    select count(order_id)
+    from order_info
+  </select>
+  <select id="selectByNameAndPhone" parameterType="com.yssen.hotel.entity.Order" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+  from order_info
+    <where>
+        <if test="name!=null">
+            and name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="phone!=null">
+          and phone = #{phone,jdbcType=VARCHAR}
+        </if>
+    and order_status = #{orderStatus,jdbcType=INTEGER}
+    </where>
+  </select>
+  <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from order_info
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByStatusAndRoomId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from order_info
+    where order_status = #{orderStatus,jdbcType=INTEGER} and room_id = #{roomId}
+  </select>
+  <select id="selectAllByUser" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from order_info
+    where user_id = #{userId,jdbcType=INTEGER} and order_status > #{orderStatus,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from order_info
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yssen.hotel.entity.Order">
+    insert into order_info (
+      order_id, name, cid, phone, room_id, room_number,type_name, price, rc_num,
+      in_date, out_date, order_status, order_cost, create_time, update_time)
+    values (#{orderId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{cid,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+      #{roomId,jdbcType=INTEGER}, #{roomNumber,jdbcType=VARCHAR}, #{typeName,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, #{rcNum,jdbcType=INTEGER},
+      #{inDate,jdbcType=TIMESTAMP}, #{outDate,jdbcType=TIMESTAMP}, #{orderStatus,jdbcType=INTEGER}, #{orderCost,jdbcType=DOUBLE},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yssen.hotel.entity.Order">
+    insert into order_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="cid != null">
+        cid,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="roomId != null">
+        room_id,
+      </if>
+      <if test="typeName != null">
+        type_name,
+      </if>
+      <if test="roomNumber != null">
+        room_number,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="rcNum != null">
+        rc_num,
+      </if>
+      <if test="inDate != null">
+        in_date,
+      </if>
+      <if test="outDate != null">
+        out_date,
+      </if>
+      <if test="orderStatus != null">
+        order_status,
+      </if>
+      <if test="orderCost != null">
+        order_cost,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null">
+        #{cid},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null">
+        #{roomId},
+      </if>
+      <if test="typeName != null">
+        #{typeName},
+      </if>
+      <if test="roomNumber != null">
+        #{roomNumber},
+      </if>
+      <if test="price != null">
+        #{price},
+      </if>
+      <if test="rcNum != null">
+        #{rcNum},
+      </if>
+      <if test="inDate != null">
+        #{inDate},
+      </if>
+      <if test="outDate != null">
+        #{outDate},
+      </if>
+      <if test="orderStatus != null">
+        #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="orderCost != null">
+        #{orderCost,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yssen.hotel.entity.Order">
+    update order_info
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null">
+        cid = #{cid},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null">
+        room_id = #{roomId},
+      </if>
+      <if test="typeName != null">
+        type_name = #{typeName},
+      </if>
+      <if test="roomNumber != null">
+        room_number = #{roomNumber},
+      </if>
+      <if test="price != null">
+        price = #{price},
+      </if>
+      <if test="rcNum != null">
+        rc_num = #{rcNum},
+      </if>
+      <if test="inDate != null">
+        in_date = #{inDate},
+      </if>
+      <if test="outDate != null">
+        out_date = #{outDate},
+      </if>
+      <if test="orderStatus != null">
+        order_status = #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="orderCost != null">
+        order_cost = #{orderCost,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yssen.hotel.entity.Order">
+    update order_info
+    set name = #{name,jdbcType=VARCHAR},
+      cid = #{cid},
+      phone = #{phone,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      room_id = #{roomId},
+      type_name = #{typeName},
+      room_number = #{roomNumber},
+        type_name = #{type_name},
+      price = #{price},
+      rc_num = #{rcNum},
+      in_date = #{inDate},
+      out_date = #{outDate},
+      order_status = #{orderStatus,jdbcType=INTEGER},
+      order_cost = #{orderCost,jdbcType=DOUBLE},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="selectList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from order_info
+    <where>
+      <if test="phone!=null">
+        and phone=#{phone}
+      </if>
+      <if test="roomNumber!=null">
+        and room_number=#{roomNumber}
+      </if>
+    </where>
+    limit #{page},#{limit}
+  </select>
+
+  <select id="getCount" resultType="java.lang.Integer">
+    select count(order_id) from order_info
+    <where>
+      <if test="phone!=null">
+        and phone=#{phone}
+      </if>
+      <if test="roomNumber!=null">
+        and room_number=#{roomNumber}
+      </if>
+    </where>
+  </select>
+</mapper>

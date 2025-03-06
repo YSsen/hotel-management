@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yssen.hotel.mapper.RoomTypeMapper">
+  <resultMap id="BaseResultMap" type="com.yssen.hotel.entity.RoomType">
+    <id column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+    <result column="type_num" jdbcType="INTEGER" property="typeNum" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="deposit" jdbcType="DOUBLE" property="deposit" />
+    <result column="type_bed" jdbcType="VARCHAR" property="typeBed" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="tc_num" jdbcType="INTEGER" property="tcNum" />
+    <result column="floor" jdbcType="VARCHAR" property="floor" />
+    <result column="picture" jdbcType="VARCHAR" property="picture" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    type_id, type_name, type_num, price, deposit, type_bed, area, tc_num, floor, picture, create_time,
+    update_time
+  </sql>
+  <select id="getCount" resultType="java.lang.Integer">
+    select count(type_id) from room_type
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from room_type
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from room_type
+  </select>
+  <select id="selectByTypeName" parameterType="String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from room_type
+    where type_name = #{typeName,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from room_type
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yssen.hotel.entity.RoomType">
+    insert into room_type (type_id, type_name, type_num, price, deposit, type_bed, area, tc_num, floor, picture, create_time,
+                           update_time)
+    values (#{typeId,jdbcType=INTEGER}, #{typeName,jdbcType=VARCHAR},
+      #{typeNum,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, #{deposit,jdbcType=DOUBLE},
+      #{typeBed,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{tcNnum,jdbcType=INTEGER},
+      #{floor,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR},
+      now(), now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.yssen.hotel.entity.RoomType">
+    insert into room_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="typeId != null">
+        type_id,
+      </if>
+      <if test="typeName != null">
+        type_name,
+      </if>
+      <if test="typeNum != null">
+        type_num,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="deposit != null">
+        deposit,
+      </if>
+      <if test="typeBed != null">
+        type_bed,
+      </if>
+      <if test="area != null">
+        area,
+      </if>
+      <if test="tcNum != null">
+        tc_num,
+      </if>
+      <if test="floor != null">
+        floor,
+      </if>
+      <if test="picture != null">
+        picture,
+      </if>
+        create_time,
+        update_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="typeId != null">
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="typeName != null">
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeNum != null">
+        #{typeNum,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="deposit != null">
+        #{deposit,jdbcType=DOUBLE},
+      </if>
+      <if test="typeBed != null">
+        #{typeBed,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="tcNum != null">
+        #{tcNum,jdbcType=INTEGER},
+      </if>
+      <if test="floor != null">
+        #{floor,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        #{picture,jdbcType=VARCHAR},
+      </if>
+      now(),
+      now(),
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yssen.hotel.entity.RoomType">
+    update room_type
+    <set>
+      <if test="typeName != null">
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="typeNum != null">
+        type_num = #{typeNum,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="deposit != null">
+        deposit = #{deposit,jdbcType=DOUBLE},
+      </if>
+      <if test="typeBed != null">
+        type_bed = #{typeBed,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="tcNum != null">
+        tc_num = #{tcNum,jdbcType=INTEGER},
+      </if>
+      <if test="floor != null">
+        floor = #{floor,jdbcType=INTEGER},
+      </if>
+      <if test="picture != null">
+        picture = #{picture,jdbcType=INTEGER},
+      </if>
+        update_time = now(),
+    </set>
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yssen.hotel.entity.RoomType">
+    update room_type
+    set type_name = #{typeName,jdbcType=VARCHAR},
+      type_num = #{typeNum,jdbcType=INTEGER},
+      price = #{price,jdbcType=DOUBLE},
+      deposit = #{deposit,jdbcType=DOUBLE},
+      type_bed = #{typeBed,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      tc_num = #{tcNum,jdbcType=INTEGER},
+      floor = #{floor,jdbcType=VARCHAR},
+        picture = #{picture,jdbcType=VARCHAR},
+      update_time = now()
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </update>
+</mapper>

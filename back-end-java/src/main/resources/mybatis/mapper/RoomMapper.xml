@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yssen.hotel.mapper.RoomMapper">
+  <resultMap id="BaseResultMap" type="com.yssen.hotel.entity.Room">
+    <id column="room_id" jdbcType="INTEGER" property="roomId" />
+    <result column="room_number" jdbcType="VARCHAR" property="roomNumber" />
+    <result column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="room_status" jdbcType="INTEGER" property="roomStatus" />
+    <result column="floor" jdbcType="VARCHAR" property="floor" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    room_id, room_number, type_id, room_status,
+    floor, phone, create_time, update_time
+  </sql>
+  <sql id="Type_Column_List">
+    type_id, type_name, type_num, price, deposit, type_bed, area, tc_num, floor
+  </sql>
+
+  <select id="getCount" resultType="java.lang.Integer">
+    select count(room_id) from room_info
+    <where>
+      <if test="typeId!=null">
+        and type_id=#{typeId}
+      </if>
+      <if test="phone!=null">
+        and phone=#{phone}
+      </if>
+      <if test="roomStatus!=null">
+        and room_status=#{roomStatus}
+      </if>
+    </where>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from room_info
+    where room_id = #{roomId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByNumber" parameterType="String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from room_info
+    where room_number = #{roomNumber,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByType" parameterType="Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+     from room_info
+    where type_id = #{typeId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByStatus" parameterType="Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+     from room_info
+    where room_status = #{roomStatus,jdbcType=INTEGER}
+  </select>
+  <select id="randomSelectByTypeAndStatus" parameterType="Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from room_info
+    where type_id = #{typeId,jdbcType=INTEGER} and room_status = #{roomStatus,jdbcType=INTEGER}
+    ORDER BY RAND() LIMIT 1
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+     from room_info
+  </select>
+  <select id="selectList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from room_info
+    <where>
+      <if test="typeId!=null">
+        and type_id=#{typeId}
+      </if>
+      <if test="roomStatus!=null">
+        and room_status=#{roomStatus}
+      </if>
+    </where>
+    limit #{page},#{limit}
+  </select>
+  <select id="selectList2" resultMap="BaseResultMap">
+    select r.*, t.type_name as typeName, t.type_num as typeNum, t.price as price, t.deposit as deposit,
+           t.type_bed as typeBed, t.area as area, t.tc_num as tcNum
+    from
+    (select
+    <include refid="Base_Column_List"/> from room_info
+    <where>
+        <if
+                test="typeId!=null">
+          and type_id=#{typeId}
+        </if>
+        <if test="roomStatus!=null">
+          and room_status=#{roomStatus}
+        </if>
+        <if test="phone!=null">
+          and phone=#{phone}
+        </if>
+      </where>
+        limit #{page},#{limit}
+    ) r left join
+    (select
+    <include refid="Type_Column_List" />
+    from room_type
+    ) t on r.type_id = t.type_id
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from room_info
+    where room_id = #{roomId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yssen.hotel.entity.Room">
+    insert into room_info (room_id, room_number, type_id,
+      room_status, floor, create_time, update_time)
+    values (#{roomId,jdbcType=INTEGER}, #{roomNumber,jdbcType=VARCHAR}, #{typeId,jdbcType=INTEGER},
+      #{roomStatus,jdbcType=INTEGER}, #{floor,jdbcType=VARCHAR}, now(),
+      now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.yssen.hotel.entity.Room">
+    insert into room_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roomId != null">
+        room_id,
+      </if>
+      <if test="roomNumber != null">
+        room_number,
+      </if>
+      <if test="typeId != null">
+        type_id,
+      </if>
+      <if test="roomStatus != null">
+        room_status,
+      </if>
+      <if test="floor != null">
+        floor,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+        create_time,
+        update_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roomId != null">
+        #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="roomNumber != null">
+        #{roomNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null">
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="roomStatus != null">
+        #{roomStatus,jdbcType=INTEGER},
+      </if>
+      <if test="floor != null">
+        #{floor,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      now(),
+      now(),
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yssen.hotel.entity.Room">
+    update room_info
+    <set>
+      <if test="roomNumber != null">
+        room_number = #{roomNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null">
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="roomStatus != null">
+        room_status = #{roomStatus,jdbcType=INTEGER},
+      </if>
+      <if test="floor != null">
+        floor = #{floor,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+        update_time = now(),
+    </set>
+    where room_id = #{roomId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yssen.hotel.entity.Room">
+    update room_info
+    set room_number = #{roomNumber,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=INTEGER},
+      room_status = #{roomStatus,jdbcType=INTEGER},
+      floor = #{floor,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      update_time = now()
+    where room_id = #{roomId,jdbcType=INTEGER}
+  </update>
+</mapper>
